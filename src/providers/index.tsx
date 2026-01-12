@@ -1,5 +1,4 @@
-import { TanStackDevtools } from '@tanstack/react-devtools'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
+import { TanStackDevtools } from './tanstack-dev-tools'
 import { ThemeProvider } from './theme-provider'
 
 interface ProvidersProps {
@@ -10,18 +9,7 @@ function Providers({ children }: ProvidersProps) {
   return (
     <>
       <ThemeProvider>{children}</ThemeProvider>
-      <TanStackDevtools
-        config={{
-          position: 'bottom-right',
-          defaultOpen: false,
-        }}
-        plugins={[
-          {
-            name: 'Tanstack Router',
-            render: <TanStackRouterDevtoolsPanel />,
-          },
-        ]}
-      />
+      <TanStackDevtools />
     </>
   )
 }

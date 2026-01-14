@@ -1,7 +1,8 @@
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import appCss from '../styles.css?url'
-import Providers from '@/providers'
-import { ThemeProvider } from '@/providers/theme-provider'
+import Providers from '@/components/providers'
+import { ThemeProvider } from '@/components/providers/theme-provider'
+import notFoundComponent from '@/components/web/not-found'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -24,7 +25,7 @@ export const Route = createRootRoute({
       },
     ],
   }),
-
+  notFoundComponent,
   shellComponent: RootDocument,
 })
 

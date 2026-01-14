@@ -11,6 +11,9 @@ export const getRouter = () => {
 
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
+    defaultNotFoundComponent: () => {
+      return <div>404 - Page Not Found!</div>
+    },
   })
 
   return router

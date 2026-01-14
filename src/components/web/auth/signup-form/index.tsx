@@ -6,14 +6,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
+import { Field, FieldDescription, FieldGroup } from '@/components/ui/field'
+import FormField from '../form-field'
+import useAuthClient from '@/hooks/use-auth-client'
 import { cn } from '@/lib/utils'
 import {
   signupDataSchema,
@@ -23,16 +18,19 @@ import { useForm } from '@tanstack/react-form'
 import { Link } from '@tanstack/react-router'
 import type { FormEvent } from 'react'
 import type { FormProps } from '../form-types'
+import { SignUpFormInputs } from './signup-form-inputs'
 
 export function SignupForm({ className, ...props }: FormProps) {
+  const { handleSignUp } = useAuthClient()
+
   const form = useForm({
     defaultValues: signupDefaultValues,
     validators: {
       onSubmit: signupDataSchema,
-      onBlur: signupDataSchema,
     },
-    onSubmit: async ({ value }) => {
-      console.log('Success: ', value)
+    onSubmit: ({ value }) => {
+      handleSignUp(value)
+      console.log('Signup form submitted with value:', value)
     },
   })
 
@@ -40,6 +38,11 @@ export function SignupForm({ className, ...props }: FormProps) {
     e.preventDefault()
     form.handleSubmit()
   }
+
+  // const disabled =
+  //   form.store.state.isSubmitting ||
+  //   form.store.state.isValidating ||
+  //   !form.store.state.isValid
 
   return (
     <Card className={cn('max-w-md w-full', className)} {...props}>
@@ -52,84 +55,16 @@ export function SignupForm({ className, ...props }: FormProps) {
       <CardContent>
         <form onSubmit={handleSubmit}>
           <FieldGroup>
-            <form.Field
-              name="fullName"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Full Name</FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      aria-invalid={isInvalid}
-                      placeholder="John Doe"
-                      autoComplete="off"
-                      type="text"
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                )
-              }}
-            />
-            <form.Field
-              name="email"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      aria-invalid={isInvalid}
-                      placeholder="john.doe@example.com"
-                      autoComplete="off"
-                      type="email"
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                )
-              }}
-            />
-            <form.Field
-              name="password"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      aria-invalid={isInvalid}
-                      placeholder="********"
-                      autoComplete="off"
-                      type="password"
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                )
-              }}
-            />
+            {SignUpFormInputs.map(({ id, label, type, placeholder }) => (
+              <FormField
+                key={id}
+                form={form}
+                fieldName={id}
+                label={label}
+                placeholder={placeholder}
+                type={type}
+              />
+            ))}
             <FieldGroup>
               <Field>
                 <Button type="submit" disabled={false}>

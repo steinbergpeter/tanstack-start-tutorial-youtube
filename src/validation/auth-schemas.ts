@@ -6,9 +6,9 @@ export const signupDataSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters long'),
 })
 
-export type SignupDataSchema = z.infer<typeof signupDataSchema>
+export type SignupData = z.infer<typeof signupDataSchema>
 
-export const signupDefaultValues: SignupDataSchema = {
+export const signupDefaultValues: SignupData = {
   fullName: '',
   email: '',
   password: '',
@@ -19,9 +19,9 @@ export const loginDataSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters long'),
 })
 
-export type LoginDataSchema = z.infer<typeof loginDataSchema>
+export type LoginData = z.infer<typeof loginDataSchema>
 
-export const loginDefaultValues: LoginDataSchema = {
+export const loginDefaultValues: LoginData = {
   email: '',
   password: '',
 }

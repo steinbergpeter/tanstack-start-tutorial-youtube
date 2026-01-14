@@ -6,31 +6,27 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
+import { Field, FieldDescription, FieldGroup } from '@/components/ui/field'
 import type { FormProps } from '@/components/web/auth/form-types'
+import FormField from '../form-field'
+import useAuthClient from '@/hooks/use-auth-client'
 import { cn } from '@/lib/utils'
 import { loginDataSchema, loginDefaultValues } from '@/validation/auth-schemas'
 import { useForm } from '@tanstack/react-form'
 import { Link } from '@tanstack/react-router'
 import type { FormEvent } from 'react'
+import { LoginFormInputs } from './login-form-inputs'
 
 export function LoginForm({ className, ...props }: FormProps) {
+  const { handleLogIn } = useAuthClient()
+
   const form = useForm({
     defaultValues: loginDefaultValues,
     validators: {
       onSubmit: loginDataSchema,
       onBlur: loginDataSchema,
     },
-    onSubmit: async ({ value }) => {
-      console.log('success: ', value)
-    },
+    onSubmit: ({ value }) => handleLogIn(value),
   })
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -43,71 +39,30 @@ export function LoginForm({ className, ...props }: FormProps) {
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardDescription>
-          Enter your email below to login to your account
+          Enter your information below to login to your account
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>
           <FieldGroup>
-            <form.Field
-              name="email"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      aria-invalid={isInvalid}
-                      placeholder="john.doe@example.com"
-                      type="email"
-                      autoComplete="off"
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                )
-              }}
-            />
-            <form.Field
-              name="password"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      aria-invalid={isInvalid}
-                      placeholder="********"
-                      autoComplete="off"
-                      type="password"
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                )
-              }}
-            />
-
-            <Field>
-              <Button type="submit">Login</Button>
-              <FieldDescription className="text-center">
-                Don&apos;t have an account? <Link to="/signup">Sign up</Link>
-              </FieldDescription>
-            </Field>
+            {LoginFormInputs.map(({ id, label, type, placeholder }) => (
+              <FormField
+                key={id}
+                form={form}
+                fieldName={id}
+                label={label}
+                placeholder={placeholder}
+                type={type}
+              />
+            ))}
+          </FieldGroup>
+          <FieldGroup>
+            <Button type="submit" variant="secondary">
+              Login
+            </Button>
+            <FieldDescription className="text-center">
+              Don&apos;t have an account? <Link to="/signup">Sign up</Link>
+            </FieldDescription>
           </FieldGroup>
         </form>
       </CardContent>

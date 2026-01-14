@@ -1,7 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Navbar } from '@/components/web/navbar'
+import notFoundComponent from '@/components/web/not-found'
 
-export const Route = createFileRoute('/')({ component: App })
+export const Route = createFileRoute('/')({
+  component: App,
+  notFoundComponent,
+})
 
 function App() {
   return (

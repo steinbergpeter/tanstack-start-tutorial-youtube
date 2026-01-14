@@ -10,7 +10,7 @@ const initialState: ThemeProviderState = {
   setTheme: () => null,
 }
 
-const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
+const ThemeContext = createContext<ThemeProviderState>(initialState)
 
 // references:
 // https://ui.shadcn.com/docs/dark-mode/vite
@@ -80,7 +80,7 @@ function ThemeProvider({
   )
 
   return (
-    <ThemeProviderContext {...props} value={value}>
+    <ThemeContext {...props} value={value}>
       <ScriptOnce>
         {/* Apply theme early to avoid FOUC */}
         {`document.documentElement.classList.toggle(
@@ -89,8 +89,8 @@ function ThemeProvider({
             )`}
       </ScriptOnce>
       {children}
-    </ThemeProviderContext>
+    </ThemeContext>
   )
 }
 
-export { ThemeProviderContext, ThemeProvider }
+export { ThemeContext, ThemeProvider }

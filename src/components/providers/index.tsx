@@ -1,5 +1,6 @@
 import { TanStackDevtools } from './tanstack-dev-tools'
 import { ThemeProvider } from './theme-provider'
+import { Toaster } from '@/components/ui/sonner'
 
 interface ProvidersProps {
   children: React.ReactNode
@@ -8,8 +9,11 @@ interface ProvidersProps {
 function Providers({ children }: ProvidersProps) {
   return (
     <>
-      <ThemeProvider>{children}</ThemeProvider>
-      <TanStackDevtools />
+      <ThemeProvider>
+        {children}
+        <Toaster closeButton position="top-center" richColors />
+      </ThemeProvider>
+      <TanStackDevtools position="bottom-right" defaultOpen={false} />
     </>
   )
 }
